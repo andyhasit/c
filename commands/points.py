@@ -23,10 +23,14 @@ def list_buckets():
     ]
 
 
-def cmd_score_points(args):
+#def cmd_new_bucket(args):
+
+
+
+def cmd_points_log(args):
     """
-    alias: score.[buckets]
-    help: Score points against bucket.
+    alias: points.[buckets].log
+    help: Log points against bucket.
     """
     bucket_name = args[0]
     points = args[1]
@@ -36,9 +40,9 @@ def cmd_score_points(args):
         fp.write(line + '\n')
 
 
-def cmd_show_points(args):
+def cmd_points_status(args):
     """
-    alias: points
+    alias: points.status_all
     help: Show point stats.
     """
     with open(POINTS_LOG) as fp:
@@ -82,7 +86,3 @@ def cmd_show_points(args):
     
     # Print table
     print_table(table, align_left=(0, ), horizontal_borders=(1, len(table) - 1, ))
-
-
-#def cmd_new_bucket(args):
-
