@@ -8,11 +8,11 @@ You probably want to call:
 """
 import sys
 sys.path.append(".") # This enables commands to import settings for example
-from command_info import get_command_dictionary
+from command_info import get_callable_commands
 
 
 def run(args):
-    commands = get_command_dictionary()
+    commands = get_callable_commands()
     cmdname = args[0]
     args = args[1:]
     if cmdname in commands:

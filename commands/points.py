@@ -8,7 +8,6 @@ from utils import *
 
 
 POINTS_LOG = get_data_file('points', 'points_log')
-SEP = '||'
 
 
 def list_buckets():
@@ -22,32 +21,24 @@ def list_buckets():
         'uncategorised'
     ]
 
-
-#def cmd_new_bucket(args):
-
-
-
-def cmd_points_log(args):
+def c_cmd_points_add(args):
     """
-    alias: points.[buckets].log
-    help: Log points against bucket.
+    alias: score.[buckets].add
+    help: Add points to a bucket.
     """
     bucket_name = args[0]
     points = args[1]
     comment = ' '.join(args[2:])
-    line = SEP.join([timestamp(), bucket_name, points, comment])
-    with open(POINTS_LOG, 'a') as fp:
-        fp.write(line + '\n')
+    append_to_log(POINTS_LOG, [get_timestamp(), bucket_name, points, comment])
 
 
-def cmd_points_status(args):
+def c_cmd_points_stats(args):
     """
-    alias: points.status_all
+    alias: score.stats
     help: Show point stats.
     """
-    with open(POINTS_LOG) as fp:
-        lines = fp.readlines()
-
+    lines = extract_lines(POINTS_LOG)
+    
     # Create dicts to contain scores
     buckets = defaultdict(lambda: {'today': 0, 'yesterday':0, 'total':0})
     totals = {'today': 0, 'yesterday':0, 'total':0}
@@ -64,7 +55,7 @@ def cmd_points_status(args):
 
     # Go through log file
     for line in lines:
-        timestamp, bucket_name, points = line.split(SEP, 3)[:3]
+        timestamp, bucket_name, points, comment = split_log_line(line)
         points = int(points)
         date_str = timestamp.split(' ', 1)[0]
         bucket = buckets[bucket_name]
@@ -78,7 +69,7 @@ def cmd_points_status(args):
             totals['yesterday'] += points
 
     # Build table
-    table = [('', 'Today', 'Yesterday', 'Total')]
+    table = [('Bucket', 'Today', 'Yesterday', 'Total')]
     for bucket_name in sorted(buckets):
         bucket = buckets[bucket_name]
         table.append((bucket_name , bucket['today'], bucket['yesterday'], bucket['total']))
@@ -86,3 +77,14 @@ def cmd_points_status(args):
     
     # Print table
     print_table(table, align_left=(0, ), horizontal_borders=(1, len(table) - 1, ))
+
+
+def c_cmd_points_log(args):
+    """
+    alias: score.log
+    help: Show all log entries
+    """
+    lines = []
+    for line in extract_lines(POINTS_LOG):
+        lines.append(split_log_line(line))
+    print_table(lines, align_left=(0, 1, 1, 3))
