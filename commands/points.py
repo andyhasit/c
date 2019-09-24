@@ -4,7 +4,7 @@ Log points against categories
 from collections import defaultdict
 from datetime import datetime, timedelta
 from settings import DATE_FORMAT, DATETIME_FORMAT
-from utils import get_data_file, print_table
+from utils import *
 
 
 POINTS_LOG = get_data_file('points', 'points_log')
@@ -31,8 +31,7 @@ def cmd_score_points(args):
     bucket_name = args[0]
     points = args[1]
     comment = ' '.join(args[2:])
-    timestamp = datetime.now().strftime(DATETIME_FORMAT)
-    line = SEP.join([timestamp, bucket_name, points, comment])
+    line = SEP.join([timestamp(), bucket_name, points, comment])
     with open(POINTS_LOG, 'a') as fp:
         fp.write(line + '\n')
 
@@ -82,7 +81,7 @@ def cmd_show_points(args):
     table.append(('totals', totals['today'], totals['yesterday'], totals['total']))
     
     # Print table
-    print_table(table, horizontal_borders=(1, len(table) - 1, ))
+    print_table(table, align_left=(0, ), horizontal_borders=(1, len(table) - 1, ))
 
 
 #def cmd_new_bucket(args):
