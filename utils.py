@@ -119,12 +119,14 @@ def get_data_file(namespace, name):
     return path
 
 
-def print_table(data, horizontal_borders=None, align_left=None):
+def print_table(data, horizontal_borders=None, align_left=None, 
+        blank_above=True, blank_below=True):
     """
     Prints tabular data.
     @horizontal_borders: <tuple> specifies where to place horizontal borders between lines 
     """
-    print(' ')
+    if blank_above:
+        print(' ')
     if horizontal_borders is None:
         horizontal_borders = ()
     if align_left is None:
@@ -150,4 +152,5 @@ def print_table(data, horizontal_borders=None, align_left=None):
             else:
                 line += padding * ' ' + ' ' + col_as_str + '  '
         print(line)
-    print(' ')
+    if blank_below:
+        print(' ')
